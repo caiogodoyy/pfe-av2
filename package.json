@@ -1,0 +1,26 @@
+{
+  "name": "pfe-av2-backend",
+  "version": "1.0.0",
+  "description": "Backend for the PFE Final Project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/caiogodoyy/pfe-av2-backend.git"
+  },
+  "author": "Caio Godoy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/caiogodoyy/pfe-av2-backend/issues"
+  },
+  "homepage": "https://github.com/caiogodoyy/pfe-av2-backend#readme",
+  "dependencies": {
+    "express": "^4.19.2",
+    "mongodb": "^6.7.0",
+    "nodemon": "^3.1.2"
+  }
+}
