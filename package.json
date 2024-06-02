@@ -20,6 +20,7 @@
   "homepage": "https://github.com/caiogodoyy/pfe-av2-backend#readme",
   "dependencies": {
     "express": "^4.19.2",
+    "joi": "^17.13.1",
     "mongodb": "^6.7.0",
     "nodemon": "^3.1.2"
   }
