@@ -24,14 +24,14 @@ router.post("/register", async (req, res) => {
     const password = await bcrypt.hash(req.body.password, 10);
     const { name, cpf, birthDate, civilStatus, education } = req.body;
 
-    const user = await db.collection("clients").findOne({ email });
+    const client = await db.collection("clients").findOne({ email: email });
 
-    if (user) return res.status(409).send("User Already Exists");
+    if (client) return res.status(409).send("Client Already Exists");
 
     await db.collection("clients").insertOne({ email, password, name, cpf, 
       birthDate, civilStatus, education });
 
-    res.send("User Created Successfully");
+    res.send("Client Created Successfully");
   } catch (err) {
     console.error(err);
     res.status(500).send("Internal Server Error");

@@ -24,9 +24,9 @@ router.post("/login", async (req, res) => {
     const email = req.body.email.toLowerCase();
     const { password } = req.body;
 
-    const user = await db.collection("clients").findOne({ email });
+    const client = await db.collection("clients").findOne({ email: email });
 
-    if (!user || !await bcrypt.compare(password, user.password))
+    if (!client || !await bcrypt.compare(password, client.password))
       return res.status(401).send("Invalid Credentials");
 
     res.send("Login Successful");
@@ -46,14 +46,14 @@ router.post("/login/change-password", async (req, res) => {
     const newPassword = await bcrypt.hash(req.body.newPassword, 10);
     const { oldPassword } = req.body;
 
-    const user = await db.collection("clients").findOne({ email });
+    const client = await db.collection("clients").findOne({ email: email });
 
-    if (!user || !await bcrypt.compare(oldPassword, user.password))
+    if (!client || !await bcrypt.compare(oldPassword, client.password))
       return res.status(401).send("Invalid Credentials");
 
     await db
       .collection("clients")
-      .updateOne({ email }, { $set: { password: newPassword } });
+      .updateOne({ email: email }, { $set: { password: newPassword } });
 
     res.send("Password Changed Successfully");
   } catch (err) {
