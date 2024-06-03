@@ -1,8 +1,14 @@
 const express = require("express");
 const Joi = require("joi");
+const bcrypt = require("bcrypt");
 
 const registerSchema = Joi.object({
-  username: Joi.string().min(5).required(),
+  name: Joi.string().required(),
+  cpf: Joi.string().required(),
+  birthDate: Joi.date().iso().required(),
+  civilStatus: Joi.string().required(),
+  education: Joi.string().required(),
+  email: Joi.string().email().required(),
   password: Joi.string().min(8).required(),
 });
 
@@ -14,15 +20,18 @@ router.post("/register", async (req, res) => {
 
   try {
     const db = req.db;
-    const { username, password } = req.body;
+    const email = req.body.email.toLowerCase();
+    const password = await bcrypt.hash(req.body.password, 10);
+    const { name, cpf, birthDate, civilStatus, education } = req.body;
 
-    const user = await db.collection("clients").findOne({ username });
+    const user = await db.collection("clients").findOne({ email });
 
-    if (user) return res.status(409).send("User already exists");
+    if (user) return res.status(409).send("User Already Exists");
 
-    await db.collection("clients").insertOne({ username, password });
+    await db.collection("clients").insertOne({ email, password, name, cpf, 
+      birthDate, civilStatus, education });
 
-    res.send("User created successfully");
+    res.send("User Created Successfully");
   } catch (err) {
     console.error(err);
     res.status(500).send("Internal Server Error");

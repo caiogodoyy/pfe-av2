@@ -15,8 +15,8 @@ async function connectToMongo() {
       await db.createCollection("clients");
     if (!collectionNames.includes("services"))
       await db.createCollection("services");
-    if (!collectionNames.includes("solicitations"))
-      await db.createCollection("solicitations");
+    if (!collectionNames.includes("requests"))
+      await db.createCollection("requests");
     console.log("Migrations completed");
 
     return db;
