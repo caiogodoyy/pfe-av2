@@ -1,9 +1,9 @@
 const express = require("express");
 
-const { connectToMongo } = require("./db")
+const { connectToDatabase } = require("./db")
 const router = require("./routes/index");
 
-const PORT = process.env.PFE_APPLICATION_PORT || 3000;
+const PORT = process.env.APPLICATION_PORT || 3000;
 
 async function startServer() {
   const app = express();
@@ -11,7 +11,7 @@ async function startServer() {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
 
-  const db = await connectToMongo();
+  const db = await connectToDatabase();
 
   app.use((req, res, next) => {
     req.db = db;

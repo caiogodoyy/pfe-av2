@@ -20,16 +20,23 @@ router.post("/login", async (req, res) => {
   if (error) return res.status(400).json({ error: error.details[0].message });
 
   try {
-    const db = req.db;
     const email = req.body.email.toLowerCase();
     const { password } = req.body;
 
-    const client = await db.collection("clients").findOne({ email: email });
+    const [client] = await req.db.execute(
+      "SELECT * FROM clients WHERE email = ?",
+      [email]
+    );
 
-    if (!client || !await bcrypt.compare(password, client.password))
+    if (client.length < 1 || !(await bcrypt.compare(password, client[0].password)))
       return res.status(401).send("Invalid Credentials");
 
-    res.send("Login Successful");
+    const { password: removePassword, ...returnClientBody } = client[0];
+
+    res.json({
+      message: "Login Successful",
+      user: returnClientBody
+    });
   } catch (err) {
     console.error(err);
     res.status(500).send("Internal Server Error");
@@ -41,21 +48,29 @@ router.post("/login/change-password", async (req, res) => {
   if (error) return res.status(400).json({ error: error.details[0].message });
 
   try {
-    const db = req.db;
     const email = req.body.email.toLowerCase();
     const newPassword = await bcrypt.hash(req.body.newPassword, 10);
     const { oldPassword } = req.body;
 
-    const client = await db.collection("clients").findOne({ email: email });
+    const [client] = await req.db.execute(
+      "SELECT * FROM clients WHERE email = ?",
+      [email]
+    );
 
-    if (!client || !await bcrypt.compare(oldPassword, client.password))
+    if (client.length < 1 || !(await bcrypt.compare(oldPassword, client[0].password)))
       return res.status(401).send("Invalid Credentials");
 
-    await db
-      .collection("clients")
-      .updateOne({ email: email }, { $set: { password: newPassword } });
+    await req.db.execute(
+      "UPDATE clients SET password = ? WHERE email = ?",
+      [newPassword, email]
+    );
 
-    res.send("Password Changed Successfully");
+    const { password: removePassword, ...returnClientBody } = client[0];
+
+    res.json({
+      message: "Password changed successfully",
+      user: returnClientBody
+    });
   } catch (err) {
     console.error(err);
     res.status(500).send("Internal Server Error");

@@ -1,23 +1,64 @@
-const { MongoClient } = require("mongodb");
+const mysql = require("mysql2/promise");
 
-const client = new MongoClient(process.env.MONGODB_URL);
-
-async function connectToMongo() {
+async function connectToDatabase() {
   try {
-    await client.connect();
-    const db = client.db(process.env.MONGODB_NAME);
-    console.log("Connected to MongoDB");
+    const connection = await mysql.createConnection({
+      host: process.env.MYSQL_HOST,
+      user: process.env.MYSQL_USER,
+      password: process.env.MYSQL_PASSWORD,
+    });
 
-    const collections = await db.collections();
-    const collectionNames = collections.map((col) => col.collectionName);
+    await connection.execute(
+      `CREATE DATABASE IF NOT EXISTS \`${process.env.MYSQL_DATABASE}\``
+    );
 
-    if (!collectionNames.includes("clients"))
-      await db.createCollection("clients");
-    if (!collectionNames.includes("services"))
-      await db.createCollection("services");
-    if (!collectionNames.includes("requests"))
-      await db.createCollection("requests");
-    console.log("Migrations completed");
+    const db = await mysql.createConnection({
+      host: process.env.MYSQL_HOST,
+      user: process.env.MYSQL_USER,
+      password: process.env.MYSQL_PASSWORD,
+      database: process.env.MYSQL_DATABASE,
+    });
+
+    console.log("Connected to database");
+
+    await db.execute(
+      `CREATE TABLE IF NOT EXISTS clients (
+        id CHAR(36) NOT NULL PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        cpf VARCHAR(14) NOT NULL UNIQUE,
+        birthDate DATE NOT NULL,
+        civilStatus VARCHAR(50) NOT NULL,
+        education VARCHAR(100) NOT NULL,
+        email VARCHAR(255) NOT NULL UNIQUE,
+        password VARCHAR(255) NOT NULL
+      )`
+    );
+
+    await db.execute(
+      `CREATE TABLE IF NOT EXISTS services (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(255) NOT NULL UNIQUE,
+        price DECIMAL(10, 2) NOT NULL
+      )`
+    );
+
+    await db.execute(
+      `CREATE TABLE IF NOT EXISTS requests (
+        id CHAR(36) NOT NULL PRIMARY KEY,
+        price DECIMAL(10, 2) NOT NULL,
+        serviceDeadline INT NOT NULL,
+        scheduledDate DATE NOT NULL,
+        status VARCHAR(50) NOT NULL,
+        requestDate DATE NOT NULL,
+        requestNumber INT NOT NULL UNIQUE,
+        clientId CHAR(36),
+        serviceId INT,
+        FOREIGN KEY (clientId) REFERENCES clients(id),
+        FOREIGN KEY (serviceId) REFERENCES services(id)
+      )`
+    );
+
+    console.log("Tables created");
 
     return db;
   } catch (err) {
@@ -25,4 +66,4 @@ async function connectToMongo() {
   }
 }
 
-module.exports = { connectToMongo };
+module.exports = { connectToDatabase };

@@ -1,6 +1,7 @@
 const express = require("express");
 const Joi = require("joi");
 const bcrypt = require("bcrypt");
+const { v4: uuidv4 } = require("uuid");
 
 const registerSchema = Joi.object({
   name: Joi.string().required(),
@@ -19,22 +20,24 @@ router.post("/register", async (req, res) => {
   if (error) return res.status(400).json({ error: error.details[0].message });
 
   try {
-    const db = req.db;
+    const id = uuidv4();
     const email = req.body.email.toLowerCase();
     const password = await bcrypt.hash(req.body.password, 10);
     const { name, cpf, birthDate, civilStatus, education } = req.body;
 
-    const client = await db.collection("clients").findOne({ email: email });
+    await req.db.execute(
+      "INSERT INTO clients (id, name, cpf, birthDate, civilStatus, education, email, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+      [id, name, cpf, birthDate, civilStatus, education, email, password]
+    );
 
-    if (client) return res.status(409).send("Client Already Exists");
-
-    await db.collection("clients").insertOne({ email, password, name, cpf, 
-      birthDate, civilStatus, education });
-
-    res.send("Client Created Successfully");
+    res.status(201).send("Client created successfully");
   } catch (err) {
-    console.error(err);
-    res.status(500).send("Internal Server Error");
+    if (err.code === "ER_DUP_ENTRY") {
+      res.status(400).send("This client already exists");
+    } else {
+      console.error(err);
+      res.status(500).send("Internal Server Error");
+    }
   }
 });
 
