@@ -13,16 +13,8 @@ Developed as a Node.js REST API exercise project. This project focuses on buildi
 - Docker (for running MySQL in a container, optional)
 
 ## Installation
-To set up the project locally, follow these steps:
-1. Clone the repository to your local machine.
-    ```
-    git clone https://github.com/caiogodoyy/pfe-av2-backend
-    ```
-2. Navigate to the project directory.
-    ```
-    cd pfe-av2-backend
-    ```
-3. Install the dependencies.
+
+1. Install the dependencies.
     ```
     npm install
     ```
