@@ -26,6 +26,7 @@ async function connectToDatabase() {
         id CHAR(36) NOT NULL PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
         cpf VARCHAR(14) NOT NULL UNIQUE,
+        phone VARCHAR(20) NULL,
         birthDate DATE NOT NULL,
         civilStatus VARCHAR(50) NOT NULL,
         education VARCHAR(100) NOT NULL,
@@ -38,7 +39,8 @@ async function connectToDatabase() {
       `CREATE TABLE IF NOT EXISTS services (
         id INT AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(255) NOT NULL UNIQUE,
-        price DECIMAL(10, 2) NOT NULL
+        price DECIMAL(10, 2) NOT NULL,
+        deadline INT NOT NULL
       )`
     );
 
