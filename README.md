@@ -28,7 +28,7 @@ cd pfe-av2
 Navigate to the backend directory and install the dependencies:
 
 ```bash
-cd backend
+cd pfe-av2-backend
 npm install
 ```
 
@@ -51,7 +51,7 @@ source env.sh
 Navigate to the frontend directory and install the dependencies:
 
 ```bash
-cd frontend
+cd pfe-av2-frontend
 npm install
 ```
 
