@@ -95,7 +95,7 @@ const Signup = () => {
     const payload = {
       name: form.name,
       cpf: form.cpf,
-      phone: form.phone,
+      phone: form.phone || undefined,
       birthDate: form.date,
       civilStatus: mapCivilStatus(form.status),
       education: mapEducation(form.education),
@@ -114,11 +114,14 @@ const Signup = () => {
         if (!response.ok) {
           throw new Error("Erro na resposta do servidor");
         }
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
         alert(`Cadastro realizado com sucesso`);
         localStorage.clear();
-        localStorage.setItem("user", JSON.stringify(payload));
+        localStorage.setItem("user", JSON.stringify(data?.user));
         navigate("/");
-        return response.json();
       })
       .catch((error) => {
         console.log(error);

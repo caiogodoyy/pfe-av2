@@ -36,10 +36,12 @@ const Login = () => {
       if (!response.ok) {
         throw new Error("Falha no login");
       }
+      const data = await response.json();
+      console.log(data);
       setLoginError("");
       alert("Login bem-sucedido!");
       localStorage.clear();
-      localStorage.setItem("user", JSON.stringify({ email, password }));
+      localStorage.setItem("user", JSON.stringify(data?.user));
       navigate("/");
     } catch (error) {
       setLoginError("Email ou senha incorretos");
