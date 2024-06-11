@@ -6,12 +6,12 @@ const { v4: uuidv4 } = require("uuid");
 const registerSchema = Joi.object({
   name: Joi.string().required(),
   cpf: Joi.string().required(),
-  phone: Joi.string().required(),
+  phone: Joi.string().optional(),
   birthDate: Joi.date().iso().required(),
   civilStatus: Joi.string().required(),
   education: Joi.string().required(),
   email: Joi.string().email().required(),
-  password: Joi.string().min(8).optional(),
+  password: Joi.string().min(8).required(),
 });
 
 const router = express.Router();
