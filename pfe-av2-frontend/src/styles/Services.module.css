@@ -1,57 +1,233 @@
-.page-container {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
+/* style.module.css */
+body {
+  font-family: Arial, sans-serif;
+  background: white;
+  color: #072436;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
 }
 
-.content-wrap {
-    flex: 1;
+.navbar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0px 60px;
+  background-color: #f8f9fa;
+  height: 90px;
 }
 
-.table-section,
-.new-request-section {
-    margin: 20px;
+.logo {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  margin-left: 50px;
+}
+
+.logo img {
+  height: 50px;
+  margin-right: 20px;
+  border-radius: 50%;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+  margin-right: 150px;
+}
+
+nav ul li {
+  padding: 0 15px;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+}
+
+.icon {
+  margin-right: 10px;
+}
+
+nav ul li a:hover {
+  color: #072436;
+}
+
+footer {
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  padding: 20px 0;
+  font-size: 14px;
+}
+
+.footerContent {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  padding: 20px;
+}
+
+.footerSection h3,
+.footerSection h4 {
+  color: #fff;
+}
+
+.footerSection p,
+.footerSection a {
+  color: #bbb;
+  text-decoration: none;
+}
+
+.footerSection a:hover {
+  color: #fff;
+}
+
+.footerSection img {
+  height: 20px;
+  width: 20px;
+}
+
+.footerBottom {
+  margin-top: 20px;
+  border-top: 1px solid #444;
+  padding-top: 10px;
+}
+
+@media (max-width: 768px) {
+  .footerContent {
+    grid-template-columns: 1fr;
+  }
+}
+
+main {
+  height: fit-content;
+  min-height: 70vh;
+}
+
+.emailSection {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.emailSection div {
+  width: 70%;
+}
+
+.newRequestSection {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .forms {
-    display: flex;
-    flex-direction: column;
-    align-items: start;
+  width: 70%;
 }
 
-.forms-wrapper {
-    display: flex;
-    flex-direction: column;
+.formsWrapper {
+  width: 500px;
+  margin-bottom: 50px;
 }
 
-.form-group {
-    margin-bottom: 10px;
+.formGroup {
+  margin-bottom: 15px;
 }
 
-.submit-button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    cursor: pointer;
+formGroup label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
 }
 
-.submit-button:hover {
-    background-color: #45a049;
+formGroup span {
+  display: block;
+  background-color: white;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
-.table-section table {
+select {
+  width: 100%;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.submitButton {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  background-color: #072436;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.submitButton:hover {
+  background-color: #153041;
+}
+
+.sectionMessage {
+  margin-top: 30px;
+  font-weight: 500;
+  font-size: 18px;
+}
+
+.tableSection {
+  margin: 30px 0 25px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+table {
+  width: 70%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+label {
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+button {
+  padding: 8px 16px;
+  background-color: #072436;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #1c3646;
+}
+
+.formGroupAdd {
+  label {
     width: 100%;
-    border-collapse: collapse;
-}
-
-.table-section th,
-.table-section td {
-    border: 1px solid #ddd;
-    padding: 8px;
-}
-
-.table-section th {
-    background-color: #f2f2f2;
-    text-align: left;
+  }
+  input {
+    width: 100%;
+  }
+  margin-bottom: 5px;
 }
