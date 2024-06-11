@@ -11,7 +11,7 @@ const registerSchema = Joi.object({
   civilStatus: Joi.string().required(),
   education: Joi.string().required(),
   email: Joi.string().email().required(),
-  password: Joi.string().min(8).required(),
+  password: Joi.string().min(7).required(),
 });
 
 const router = express.Router();
