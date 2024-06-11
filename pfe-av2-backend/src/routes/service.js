@@ -5,6 +5,7 @@ const logger = require("../logger");
 const serviceSchema = Joi.object({
   name: Joi.string().required(),
   price: Joi.number().required(),
+  deadline: Joi.number().required(),
 });
 
 const requestSchema = Joi.array().items(
