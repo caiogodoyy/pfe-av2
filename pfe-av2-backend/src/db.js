@@ -55,7 +55,6 @@ async function connectToDatabase() {
 
     await db.execute(
       `CREATE TABLE IF NOT EXISTS requests (
-        id CHAR(36) NOT NULL PRIMARY KEY,
         price DECIMAL(10, 2) NOT NULL,
         serviceDeadline INT NOT NULL,
         scheduledDate DATE NOT NULL,

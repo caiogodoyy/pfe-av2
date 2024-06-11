@@ -45,7 +45,7 @@ router.get("/service/:id", async (req, res) => {
     logger.info(`Attempting to fetch all services for client: ${id}`);
 
     const [services] = await req.db.execute(
-      "SELECT * FROM services WHERE id = ?",
+      "SELECT * FROM requests WHERE clientId = ?",
       [id]
     );
 
@@ -67,13 +67,14 @@ router.post("/service", async (req, res) => {
 
   try {
     const name = req.body.name.toLowerCase();
-    const { price } = req.body;
+    const { price, deadline } = req.body;
 
     logger.info(`Attempting to create a new service: ${name}`);
 
-    await req.db.execute("INSERT INTO services (name, price) VALUES (?, ?)", [
+    await req.db.execute("INSERT INTO services (name, price, deadline) VALUES (?, ?, ?)", [
       name,
       price,
+      deadline
     ]);
 
     logger.info(`Successfully created service: ${name}`);
@@ -100,9 +101,11 @@ router.post("/service/request", async (req, res) => {
   try {
     const clientId = requests[0].clientId;
 
-    logger.info(`Attempting to update requests for client: ${clientId}`);
+    logger.info(`Attempting to delete requests for client: ${clientId}`);
 
     await req.db.execute("DELETE FROM requests WHERE clientId = ?", [clientId]);
+
+    logger.info(`Successfully deleted requests for client: ${clientId}`);
 
     const insertValues = requests.map((request) => [
       request.price,
@@ -115,21 +118,19 @@ router.post("/service/request", async (req, res) => {
       request.serviceId,
     ]);
 
+    logger.info(`Attempting to add requests for client: ${clientId}`);
+
     await req.db.query(
       "INSERT INTO requests (price, serviceDeadline, scheduledDate, status, requestDate, requestNumber, clientId, serviceId) VALUES ?",
       [insertValues]
     );
 
-    logger.info(`Successfully updated requests for client: ${clientId}`);
+    logger.info(`Successfully added requests for client: ${clientId}`);
 
     res.status(204).send();
   } catch (err) {
-    if (err.code === "ER_DUP_ENTRY") {
-      res.status(400).send("This service already exists");
-    } else {
-      logger.error(err);
-      res.status(500).send("Internal Server Error");
-    }
+    logger.error(err);
+    res.status(500).send("Internal Server Error");
   }
 });
 
