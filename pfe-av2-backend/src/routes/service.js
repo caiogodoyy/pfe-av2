@@ -8,18 +8,21 @@ const serviceSchema = Joi.object({
   deadline: Joi.number().required(),
 });
 
-const requestSchema = Joi.array().items(
-  Joi.object({
-    price: Joi.number().required(),
-    serviceDeadline: Joi.number().required(),
-    scheduledDate: Joi.date().required(),
-    status: Joi.string().required(),
-    requestDate: Joi.date().required(),
-    requestNumber: Joi.number().required(),
-    clientId: Joi.string().required(),
-    serviceId: Joi.number().required(),
-  })
-);
+const requestSchema = Joi.object({
+  clientId: Joi.string().required(),
+  requests: Joi.array().items(
+    Joi.object({
+      price: Joi.number().required(),
+      serviceDeadline: Joi.number().required(),
+      scheduledDate: Joi.date().required(),
+      status: Joi.string().required(),
+      requestDate: Joi.date().required(),
+      requestNumber: Joi.number().required(),
+      clientId: Joi.string().required(),
+      serviceId: Joi.number().required(),
+    })
+  ).min(0)
+});
 
 const router = express.Router();
 
@@ -91,41 +94,42 @@ router.post("/service", async (req, res) => {
 });
 
 router.post("/service/request", async (req, res) => {
-  const requests = req.body;
-  const { error } = requestSchema.validate(requests);
+  const { error } = requestSchema.validate(req.body);
   if (error) {
     logger.warn(`Validation failed for updating client requests: ${error.details[0].message}`);
     return res.status(400).json({ error: error.details[0].message });
   }
 
   try {
-    const clientId = requests[0].clientId;
-
+    const { clientId, requests } = req.body;
+    
     logger.info(`Attempting to delete requests for client: ${clientId}`);
 
     await req.db.execute("DELETE FROM requests WHERE clientId = ?", [clientId]);
 
     logger.info(`Successfully deleted requests for client: ${clientId}`);
 
-    const insertValues = requests.map((request) => [
-      request.price,
-      request.serviceDeadline,
-      request.scheduledDate,
-      request.status,
-      request.requestDate,
-      request.requestNumber,
-      request.clientId,
-      request.serviceId,
-    ]);
+    if (requests.length > 0) {
+      const insertValues = requests.map((request) => [
+        request.price,
+        request.serviceDeadline,
+        request.scheduledDate,
+        request.status,
+        request.requestDate,
+        request.requestNumber,
+        request.clientId,
+        request.serviceId,
+      ]);
 
-    logger.info(`Attempting to add requests for client: ${clientId}`);
+      logger.info(`Attempting to add requests for client: ${clientId}`);
 
-    await req.db.query(
-      "INSERT INTO requests (price, serviceDeadline, scheduledDate, status, requestDate, requestNumber, clientId, serviceId) VALUES ?",
-      [insertValues]
-    );
+      await req.db.query(
+        "INSERT INTO requests (price, serviceDeadline, scheduledDate, status, requestDate, requestNumber, clientId, serviceId) VALUES ?",
+        [insertValues]
+      );
 
-    logger.info(`Successfully added requests for client: ${clientId}`);
+      logger.info(`Successfully added requests for client: ${clientId}`);
+    }
 
     res.status(204).send();
   } catch (err) {

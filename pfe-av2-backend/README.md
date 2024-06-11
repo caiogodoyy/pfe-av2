@@ -107,7 +107,8 @@ This will start the application on the port specified in the `env` file (default
     ```json
     {
         "name": "Service Example",
-        "price": "150.00"
+        "price": 150.00,
+        "deadline": 5
     }
     ```
 
@@ -116,28 +117,31 @@ This will start the application on the port specified in the `env` file (default
 - **Method**: `POST`
 - **Body**:
     ```json
-    [
-        {
-            "price": 150.00,
-            "serviceDeadline": 7,
-            "scheduledDate": "2023-12-01",
-            "status": "Pending",
-            "requestDate": "2023-11-01",
-            "requestNumber": 12345,
-            "clientId": "uuid-of-the-client",
-            "serviceId": 1
-        },
-        {
-            "price": 200.00,
-            "serviceDeadline": 5,
-            "scheduledDate": "2023-12-02",
-            "status": "Pending",
-            "requestDate": "2023-11-02",
-            "requestNumber": 12346,
-            "clientId": "uuid-of-the-client",
-            "serviceId": 2
-        }
-    ]
+    {
+        "clientId": "uuid-of-the-client",     
+        "requests": [
+            {
+                "price": 150.00,
+                "serviceDeadline": 7,
+                "scheduledDate": "2023-12-01",
+                "status": "Pending",
+                "requestDate": "2023-11-01",
+                "requestNumber": 12345,
+                "clientId": "uuid-of-the-client",
+                "serviceId": 1
+            },
+            {
+                "price": 200.00,
+                "serviceDeadline": 5,
+                "scheduledDate": "2023-12-02",
+                "status": "Pending",
+                "requestDate": "2023-11-02",
+                "requestNumber": 12346,
+                "clientId": "uuid-of-the-client",
+                "serviceId": 2
+            }
+        ]
+    }
     ```
 
 ## License
