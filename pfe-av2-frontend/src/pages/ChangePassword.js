@@ -65,11 +65,13 @@ const ChangePassword = () => {
           }
           throw new Error("Erro na resposta do servidor");
         }
+        return response.json();
+      })
+      .then((data) => {
         alert("Troca de senha realizada com sucesso");
         localStorage.clear();
-        localStorage.setItem("user", JSON.stringify(payload));
+        localStorage.setItem("user", JSON.stringify(data?.user));
         navigate("/");
-        return response.json();
       })
       .catch((error) => {
         console.log(error);
