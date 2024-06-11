@@ -3,7 +3,7 @@ import Navbar from "./Navbar";
 import "../styles/Home.css";
 import logo from "../images/logo.png";
 
-function Header() {
+function Header({ serviceView = false, backLink = "/" }) {
   return (
     <header>
       <div className="navbar">
@@ -11,7 +11,7 @@ function Header() {
           <img src={logo} alt="Logo da Empresa" className="logo" />
           <span>Welcome to Caioba Solutions!</span>
         </div>
-        <Navbar />
+        <Navbar serviceView={serviceView} backLink={backLink} />
       </div>
     </header>
   );
