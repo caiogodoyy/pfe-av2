@@ -95,6 +95,7 @@ const Signup = () => {
     const payload = {
       name: form.name,
       cpf: form.cpf,
+      phone: form.phone,
       birthDate: form.date,
       civilStatus: mapCivilStatus(form.status),
       education: mapEducation(form.education),

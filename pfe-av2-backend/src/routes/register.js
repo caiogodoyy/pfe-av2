@@ -24,7 +24,7 @@ router.post("/register", async (req, res) => {
     const id = uuidv4();
     const email = req.body.email.toLowerCase();
     const password = await bcrypt.hash(req.body.password, 10);
-    const { name, cpf, birthDate, civilStatus, education } = req.body;
+    const { name, cpf, phone, birthDate, civilStatus, education } = req.body;
 
     await req.db.execute(
       "INSERT INTO clients (id, name, cpf, birthDate, civilStatus, education, email, password, phone) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
