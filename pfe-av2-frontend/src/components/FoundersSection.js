@@ -14,8 +14,8 @@ const founders = [
   },
   {
     role: "CMO",
-    name: "Marcoantonio Manso",
-    cv: "Marcoantonio possui vasta experiência em marketing digital e estratégias de mercado.",
+    name: "Rafael Carvalho",
+    cv: "Rafael possui vasta experiência em marketing digital e estratégias de mercado.",
   },
 ];
 
