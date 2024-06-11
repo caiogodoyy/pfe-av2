@@ -2,6 +2,7 @@ const express = require("express");
 const Joi = require("joi");
 const bcrypt = require("bcrypt");
 const { v4: uuidv4 } = require("uuid");
+const logger = require("../logger");
 
 const registerSchema = Joi.object({
   name: Joi.string().required(),
@@ -18,7 +19,10 @@ const router = express.Router();
 
 router.post("/register", async (req, res) => {
   const { error } = registerSchema.validate(req.body);
-  if (error) return res.status(400).json({ error: error.details[0].message });
+  if (error) {
+    logger.warn(`Validation failed for creating a new user: ${error.details[0].message}`);
+    return res.status(400).json({ error: error.details[0].message });
+  }
 
   try {
     const id = uuidv4();
@@ -26,10 +30,14 @@ router.post("/register", async (req, res) => {
     const password = await bcrypt.hash(req.body.password, 10);
     const { name, cpf, phone, birthDate, civilStatus, education } = req.body;
 
+    logger.info(`Attempting to create a new client: ${id}`);
+
     await req.db.execute(
       "INSERT INTO clients (id, name, cpf, birthDate, civilStatus, education, email, password, phone) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
       [id, name, cpf, birthDate, civilStatus, education, email, password, phone || null]
     );
+
+    logger.info(`Successfully created client: ${id}`);
 
     const returnClientBody = {
       id: id,
@@ -50,7 +58,7 @@ router.post("/register", async (req, res) => {
     if (err.code === "ER_DUP_ENTRY") {
       res.status(400).send("This client already exists");
     } else {
-      console.error(err);
+      logger.error(err);
       res.status(500).send("Internal Server Error");
     }
   }

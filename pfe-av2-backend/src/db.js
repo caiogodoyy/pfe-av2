@@ -1,16 +1,23 @@
 const mysql = require("mysql2/promise");
+const logger = require("./logger");
 
 async function connectToDatabase() {
   try {
+    logger.info("Starting connection with MySQL");
+
     const connection = await mysql.createConnection({
       host: process.env.MYSQL_HOST,
       user: process.env.MYSQL_USER,
       password: process.env.MYSQL_PASSWORD,
     });
 
+    logger.info("Connected to MySQL");
+
     await connection.execute(
       `CREATE DATABASE IF NOT EXISTS \`${process.env.MYSQL_DATABASE}\``
     );
+
+    logger.info("Starting connection with MySQL Database");
 
     const db = await mysql.createConnection({
       host: process.env.MYSQL_HOST,
@@ -19,7 +26,9 @@ async function connectToDatabase() {
       database: process.env.MYSQL_DATABASE,
     });
 
-    console.log("Connected to database");
+    logger.info("Connected to MySQL Database");
+
+    logger.info("Starting MySQL Tables creation");
 
     await db.execute(
       `CREATE TABLE IF NOT EXISTS clients (
@@ -60,11 +69,11 @@ async function connectToDatabase() {
       )`
     );
 
-    console.log("Tables created");
+    logger.info("MySQL Tables created");
 
     return db;
   } catch (err) {
-    console.error(err);
+    logger.error(err);
   }
 }
 

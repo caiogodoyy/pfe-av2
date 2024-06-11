@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const logger = require("./logger");
 
 const { connectToDatabase } = require("./db");
 const router = require("./routes/index");
@@ -23,7 +24,7 @@ async function startServer() {
   app.use(router);
 
   app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}/`);
+    logger.info(`Server is running on http://localhost:${PORT}/`);
   });
 }
 
