@@ -10,7 +10,6 @@ const loginSchema = Joi.object({
 
 const changePasswordSchema = Joi.object({
   email: Joi.string().email().required(),
-  oldPassword: Joi.string().min(8).required(),
   newPassword: Joi.string().min(8).required(),
 });
 
@@ -63,7 +62,6 @@ router.post("/login/change-password", async (req, res) => {
   try {
     const email = req.body.email.toLowerCase();
     const newPassword = await bcrypt.hash(req.body.newPassword, 10);
-    const { oldPassword } = req.body;
 
     logger.info(`Attempting to change password for client: ${email}`);
 
@@ -72,7 +70,7 @@ router.post("/login/change-password", async (req, res) => {
       [email]
     );
 
-    if (client.length < 1 || !(await bcrypt.compare(oldPassword, client[0].password))) {
+    if (client.length < 1) {
       logger.warn(`Password change failed for client: ${email}`);
       return res.status(401).send("Invalid Credentials");
     }

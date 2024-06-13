@@ -12,7 +12,6 @@ const ChangePassword = () => {
   const navigate = useNavigate();
   const [form, setForm] = useState({
     email: "",
-    oldPassword: "",
     newPassword: "",
     confirmNewPassword: "",
   });
@@ -47,7 +46,6 @@ const ChangePassword = () => {
   const sendPostRequest = () => {
     const payload = {
       email: form.email,
-      oldPassword: form.oldPassword,
       newPassword: form.newPassword,
     };
 
@@ -98,15 +96,6 @@ const ChangePassword = () => {
               onChange={handleChange}
               required
             />
-            <input
-              type="password"
-              id="oldPassword"
-              name="oldPassword"
-              placeholder="Senha Antiga"
-              value={form.oldPassword}
-              onChange={handleChange}
-              required
-            />
             <div className={styles.inputGroup}>
               <input
                 type="password"
@@ -138,7 +127,6 @@ const ChangePassword = () => {
               onClick={() =>
                 setForm({
                   email: "",
-                  oldPassword: "",
                   newPassword: "",
                   confirmNewPassword: "",
                 })
